@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# crash dumps
+*.stackdump
+
+# local preview screenshots
+_preview_*.png
+_hero.png
