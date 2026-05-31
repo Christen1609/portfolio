@@ -46,3 +46,6 @@ next-env.d.ts
 # local preview screenshots
 _preview_*.png
 _hero.png
+
+# build logs
+*.log
