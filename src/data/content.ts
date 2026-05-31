@@ -16,8 +16,8 @@ export const site = {
   phone: "+61 487 282 142",
   resume: "/Christen_Loyola_Resume.pdf",
   // Add these to light up the matching buttons:
-  github: "", // e.g. "https://github.com/your-username"
-  linkedin: "", // e.g. "https://www.linkedin.com/in/your-handle"
+  github: "https://github.com/Christen1609",
+  linkedin: "https://www.linkedin.com/in/christen-loyola-912858221/",
   year: "20 / 26",
 } as const;
 

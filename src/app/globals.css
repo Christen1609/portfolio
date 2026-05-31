@@ -251,6 +251,105 @@
   }
 }
 
+/* ============================================================
+   3D cube wordmark (hero last name)
+   Faces alternate white / orange; rotates forward with holds.
+   ============================================================ */
+.cube {
+  --cube-d: 0.44em;
+  display: inline-block;
+  perspective: 1400px;
+  vertical-align: baseline;
+}
+.cube__inner {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: cube-spin 11s ease-in-out infinite;
+}
+.cube__face {
+  display: inline-block;
+  white-space: nowrap;
+  backface-visibility: hidden;
+  background: var(--cl-bg);
+}
+.cube__face--a {
+  position: relative;
+  transform: translateZ(var(--cube-d));
+  color: var(--cl-white);
+}
+.cube__face--b {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(90deg) translateZ(var(--cube-d));
+  color: var(--cl-orange);
+}
+.cube__face--c {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(180deg) translateZ(var(--cube-d));
+  color: var(--cl-white);
+}
+.cube__face--d {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(270deg) translateZ(var(--cube-d));
+  color: var(--cl-orange);
+}
+
+@keyframes cube-spin {
+  0%, 16% {
+    transform: rotateX(0deg);
+  }
+  25%, 41% {
+    transform: rotateX(-90deg);
+  }
+  50%, 66% {
+    transform: rotateX(-180deg);
+  }
+  75%, 91% {
+    transform: rotateX(-270deg);
+  }
+  100% {
+    transform: rotateX(-360deg);
+  }
+}
+
+/* ============================================================
+   Custom trailing cursor ring (desktop only, see Cursor.tsx)
+   ============================================================ */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--cl-orange);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease, width 0.25s ease, height 0.25s ease,
+    background-color 0.25s ease;
+  will-change: transform;
+}
+.cursor-ring--active {
+  width: 58px;
+  height: 58px;
+  background-color: rgba(255, 61, 0, 0.12);
+}
+.cursor-ring--down {
+  width: 26px;
+  height: 26px;
+  background-color: rgba(255, 61, 0, 0.2);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-ring {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -259,6 +358,13 @@
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+  .cube__inner {
+    animation: none !important;
+    transform: rotateX(0deg) !important;
+  }
+  .cursor-ring {
+    display: none !important;
   }
   *,
   *::before,

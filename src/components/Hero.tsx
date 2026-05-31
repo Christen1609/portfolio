@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { hero, site } from "@/data/content";
+import CubeWord from "@/components/CubeWord";
 
 export default function Hero() {
   return (
@@ -32,7 +33,7 @@ export default function Hero() {
         <h1 className="display-hero text-title">
           <span className="block">{hero.first}</span>
           <span className="block">
-            {hero.last}
+            <CubeWord text={hero.last} />
             <span className="text-orange">.</span>
           </span>
         </h1>
@@ -59,12 +60,29 @@ export default function Hero() {
                 Resume
                 <span aria-hidden>↗</span>
               </a>
-              <a
-                href={`mailto:${site.email}`}
-                className="btn btn-ghost"
-              >
+              <a href={`mailto:${site.email}`} className="btn btn-ghost">
                 Email
               </a>
+              {site.github && (
+                <a
+                  href={site.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-ghost"
+                >
+                  GitHub <span aria-hidden>↗</span>
+                </a>
+              )}
+              {site.linkedin && (
+                <a
+                  href={site.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-ghost"
+                >
+                  LinkedIn <span aria-hidden>↗</span>
+                </a>
+              )}
             </div>
           </div>
 
