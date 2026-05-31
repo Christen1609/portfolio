@@ -1,0 +1,269 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design tokens — derived from the reference site CSS
+   (dark fintech/designer aesthetic: near-black bg, orange accent,
+    Helvetica Neue display type)
+   ============================================================ */
+:root {
+  --cl-bg: #0c0d10;
+  --cl-title: #ffffff;
+  --cl-subtitle: rgba(255, 255, 255, 0.7);
+  --cl-body: rgba(255, 255, 255, 0.5);
+  --cl-desc: rgba(255, 255, 255, 0.3);
+  --cl-disable: rgba(255, 255, 255, 0.15);
+  --cl-border: rgba(255, 255, 255, 0.1);
+  --cl-orange: #ff3d00;
+  --cl-white: #fff;
+
+  --container-max: 1728px;
+  --container-pad: clamp(1.25rem, 4vw, 6rem);
+
+  --spring-1: linear(
+    0, .002, .009 1%, .035, .078, .141 4.4%, .281 6.7%, .723 12.9%, .842, .938,
+    1.017, 1.077 20.4%, 1.101, 1.121, 1.137, 1.149 24.3%, 1.159, 1.163, 1.161,
+    1.154, 1.143, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 1.002, .991, .982 48.9%,
+    .977 51%, .974 53.8%, .975 57.1%, .979 60%, .997 69.8%, 1.001, 1.003 76.9%,
+    1.004 83.8%, 1
+  );
+}
+
+/* Map tokens into the Tailwind v4 theme so utilities like
+   bg-bg / text-title / border-line / text-orange work. */
+@theme inline {
+  --color-bg: var(--cl-bg);
+  --color-title: var(--cl-title);
+  --color-subtitle: var(--cl-subtitle);
+  --color-body: var(--cl-body);
+  --color-desc: var(--cl-desc);
+  --color-disable: var(--cl-disable);
+  --color-line: var(--cl-border);
+  --color-orange: var(--cl-orange);
+
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 84px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
+  }
+
+  body {
+    background: var(--cl-bg);
+    color: var(--cl-body);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.4;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--cl-orange);
+    color: #fff;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--cl-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--cl-orange);
+  }
+}
+
+/* ============================================================
+   Components & typography
+   ============================================================ */
+@layer components {
+  /* Layout helpers */
+  .container-x {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+  }
+
+  .section {
+    padding-block: clamp(5rem, 12vh, 11rem);
+  }
+
+  /* Display typography (very tight, very bold) */
+  .display-hero {
+    font-weight: 700;
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+    font-size: clamp(3.4rem, 13.5vw, 18rem);
+    text-transform: uppercase;
+  }
+
+  .display-xl {
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    font-size: clamp(2.6rem, 7.5vw, 8rem);
+    text-transform: uppercase;
+  }
+
+  .display-lg {
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-size: clamp(2.2rem, 5vw, 5rem);
+    text-transform: uppercase;
+  }
+
+  .heading-md {
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.6rem, 2.6vw, 2.75rem);
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cl-desc);
+    font-weight: 500;
+  }
+
+  .lead {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--cl-subtitle);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.6rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--cl-border);
+    color: var(--cl-title);
+    transition: background 0.35s ease, color 0.3s ease,
+      border-color 0.3s ease, transform 0.3s ease;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn-primary {
+    background: var(--cl-orange);
+    border-color: var(--cl-orange);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #ff5a26;
+    border-color: #ff5a26;
+  }
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--cl-border);
+    font-size: 0.78rem;
+    color: var(--cl-subtitle);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .hr-line {
+    height: 1px;
+    width: 100%;
+    background: var(--cl-border);
+    border: 0;
+  }
+
+  /* Link with animated underline */
+  .link-underline {
+    position: relative;
+    color: var(--cl-subtitle);
+    transition: color 0.3s ease;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--spring-1, ease);
+  }
+  .link-underline:hover {
+    color: var(--cl-title);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s var(--spring-1, ease);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
