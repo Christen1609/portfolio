@@ -29,7 +29,7 @@ export default function FocusAccordion() {
                 {area.title}
               </span>
               <span
-                className={`shrink-0 text-2xl text-orange transition-transform duration-500 ${
+                className={`shrink-0 text-2xl accent transition-transform duration-500 ${
                   isOpen ? "rotate-45" : "rotate-0"
                 }`}
                 aria-hidden

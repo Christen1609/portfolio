@@ -34,7 +34,12 @@ export default function Hero() {
           <span className="block">{hero.first}</span>
           <span className="block">
             <CubeWord text={hero.last} />
-            <span className="text-orange">.</span>
+            <sup
+              className="accent"
+              style={{ fontSize: "0.28em", verticalAlign: "super", marginLeft: "0.1em" }}
+            >
+              ®
+            </sup>
           </span>
         </h1>
       </div>
@@ -87,7 +92,10 @@ export default function Hero() {
           </div>
 
           <div className="lg:col-span-5 order-1 lg:order-2 lg:justify-self-end w-full max-w-[320px] sm:max-w-[360px]">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm border border-line">
+            <div
+              data-parallax
+              className="relative aspect-[4/5] w-full overflow-hidden rounded-sm border border-line"
+            >
               <Image
                 src="/christen.jpeg"
                 alt="Christen I. Loyola"

@@ -31,9 +31,7 @@ export default function Home() {
             <div className="lg:col-span-8 space-y-6">
               {about.paragraphs.map((p, i) => (
                 <Reveal key={i} delay={i * 80}>
-                  <p className="text-[1.15rem] sm:text-[1.4rem] leading-relaxed text-subtitle">
-                    {p}
-                  </p>
+                  <p className="intro-lg text-subtitle">{p}</p>
                 </Reveal>
               ))}
 
@@ -51,11 +49,47 @@ export default function Home() {
           </div>
         </section>
 
+        {/* INVERTED STATEMENT BAND */}
+        <section className="section section-invert">
+          <div className="container-x">
+            <Reveal>
+              <p className="eyebrow mb-8">Approach</p>
+              <p className="display-lg max-w-5xl">
+                I build machine learning that ships. From the model and the LLM
+                call to the API, the database, and the interface around it.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8">
+                {[
+                  { v: "Masters", l: "AI & ML · University of Adelaide (Go8)" },
+                  { v: "Now", l: "Software Engineer · Ahfy" },
+                  { v: "6", l: "Shipped projects, AI/ML to full-stack" },
+                ].map((s) => (
+                  <div key={s.l} className="border-t border-line pt-4">
+                    <div
+                      className="leading-none"
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontWeight: 700,
+                        fontSize: "clamp(2.2rem, 4vw, 3.4rem)",
+                      }}
+                    >
+                      {s.v}
+                    </div>
+                    <div className="mt-3 text-[0.95rem]">{s.l}</div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         {/* FOCUS / WHAT I DO */}
         <section id="focus" className="section border-t border-line">
           <div className="container-x">
             <Reveal>
-              <h2 className="display-xl text-title mb-12">
+              <h2 className="display-sub text-title mb-12">
                 What I
                 <br />
                 Do
@@ -74,7 +108,7 @@ export default function Home() {
         <section id="experience" className="section border-t border-line">
           <div className="container-x">
             <Reveal>
-              <h2 className="display-xl text-title mb-12">Experience</h2>
+              <h2 className="display-sub text-title mb-12">Experience</h2>
             </Reveal>
 
             <div>
@@ -85,20 +119,22 @@ export default function Home() {
                   delay={i * 60}
                   className="border-t border-line py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12"
                 >
-                  <div className="lg:col-span-4">
-                    <h3 className="text-title text-[1.4rem] font-semibold">
-                      {job.role}
-                    </h3>
-                    <p className="text-orange mt-1">{job.company}</p>
-                    <p className="text-desc text-[0.85rem] mt-1">
+                  <div className="lg:col-span-5">
+                    <h3 className="heading-md text-title">{job.role}</h3>
+                    <p className="mt-2 text-[0.95rem]">
+                      <span className="text-desc">{job.type}</span>
+                      <span className="text-desc"> · </span>
+                      <span className="accent">{job.company}</span>
+                    </p>
+                    <p className="text-desc text-[0.85rem] mt-1 tabular-nums">
                       {job.period}
                     </p>
                   </div>
-                  <ul className="lg:col-span-8 space-y-3">
+                  <ul className="lg:col-span-7 space-y-3">
                     {job.bullets.map((b, bi) => (
                       <li key={bi} className="flex gap-3 text-body">
-                        <span className="text-orange mt-[0.35rem] shrink-0">
-                          ▪
+                        <span className="accent mt-[0.45rem] shrink-0 text-[0.6rem]">
+                          ●
                         </span>
                         <span>{b}</span>
                       </li>
@@ -120,13 +156,13 @@ export default function Home() {
                   delay={i * 60}
                   className="border-t border-line py-8 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-12"
                 >
-                  <div className="lg:col-span-4">
-                    <p className="text-desc text-[0.85rem]">{ed.period}</p>
+                  <div className="lg:col-span-5">
+                    <p className="text-desc text-[0.85rem] tabular-nums">
+                      {ed.period}
+                    </p>
                   </div>
-                  <div className="lg:col-span-8">
-                    <h4 className="text-title text-[1.25rem] font-medium">
-                      {ed.degree}
-                    </h4>
+                  <div className="lg:col-span-7">
+                    <h4 className="heading-md text-title">{ed.degree}</h4>
                     <p className="text-subtitle mt-1">{ed.school}</p>
                     <p className="text-desc text-[0.9rem] mt-1">{ed.detail}</p>
                   </div>
@@ -141,7 +177,7 @@ export default function Home() {
           <div className="container-x grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             <div className="lg:col-span-4">
               <Reveal>
-                <h2 className="display-xl text-title">
+                <h2 className="display-sub text-title">
                   Tools &amp;
                   <br />
                   Skills

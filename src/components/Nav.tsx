@@ -4,22 +4,42 @@ import { useEffect, useState } from "react";
 import { site } from "@/data/content";
 
 const links = [
-  { href: "#about", label: "About" },
-  { href: "#focus", label: "What I Do" },
-  { href: "#work", label: "Work" },
-  { href: "#experience", label: "Experience" },
-  { href: "#contact", label: "Contact" },
+  { href: "#about", label: "About", id: "about" },
+  { href: "#focus", label: "What I Do", id: "focus" },
+  { href: "#work", label: "Work", id: "work" },
+  { href: "#experience", label: "Experience", id: "experience" },
+  { href: "#contact", label: "Contact", id: "contact" },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string>("");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Scrollspy: highlight the section currently in view.
+  useEffect(() => {
+    const sections = links
+      .map((l) => document.getElementById(l.id))
+      .filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -29,6 +49,11 @@ export default function Nav() {
     };
   }, [open]);
 
+  const socials = [
+    site.github && { label: "GH", full: "GitHub", href: site.github },
+    site.linkedin && { label: "IN", full: "LinkedIn", href: site.linkedin },
+  ].filter(Boolean) as { label: string; full: string; href: string }[];
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
@@ -37,27 +62,45 @@ export default function Nav() {
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <nav className="container-x flex items-center justify-between h-[68px]">
-        <a
-          href="#top"
-          className="text-title font-semibold tracking-tight text-[0.95rem]"
-        >
-          {site.shortName}
-          <span className="text-orange">.</span>
+      <nav className="container-x flex items-center justify-between h-[68px] gap-6">
+        {/* Wordmark: bold first name + greyed surname */}
+        <a href="#top" className="shrink-0 text-[0.95rem] tracking-tight">
+          <span className="font-bold text-title" style={{ fontFamily: "var(--font-display)" }}>
+            Christen
+          </span>{" "}
+          <span style={{ color: "var(--grey-500)" }}>Loyola</span>
         </a>
 
-        {/* Desktop links */}
+        {/* Center nav links */}
         <ul className="hidden md:flex items-center gap-8 text-[0.85rem]">
           {links.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="link-underline">
+              <a
+                href={l.href}
+                className={`link-underline nav-link ${
+                  active === l.id ? "is-active" : ""
+                }`}
+              >
                 {l.label}
               </a>
             </li>
           ))}
         </ul>
 
-        <div className="hidden md:block">
+        {/* Right cluster: socials + CTA */}
+        <div className="hidden md:flex items-center gap-5 shrink-0">
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.full}
+              className="link-underline text-[0.85rem]"
+            >
+              {s.label}
+            </a>
+          ))}
           <a href="#contact" className="btn btn-primary">
             Let&apos;s talk
           </a>
@@ -101,12 +144,29 @@ export default function Nav() {
               <a
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block py-3 text-title text-[1.5rem] font-medium"
+                className={`block py-3 text-[1.5rem] font-medium ${
+                  active === l.id ? "accent" : "text-title"
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
               >
                 {l.label}
               </a>
             </li>
           ))}
+          <li className="pt-4 flex items-center gap-6">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="link-underline text-[0.95rem]"
+              >
+                {s.full}
+              </a>
+            ))}
+          </li>
           <li className="pt-4">
             <a
               href="#contact"

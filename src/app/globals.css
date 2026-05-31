@@ -1,45 +1,66 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Design tokens — derived from the reference site CSS
-   (dark fintech/designer aesthetic: near-black bg, orange accent,
-    Helvetica Neue display type)
+   DESIGN SYSTEM — Dark editorial / Swiss-brutalist portfolio
+   Accent: electric cyan. Display: Space Grotesk.
+   Tokens follow the project Design System Spec.
    ============================================================ */
 :root {
-  --cl-bg: #0c0d10;
-  --cl-title: #ffffff;
-  --cl-subtitle: rgba(255, 255, 255, 0.7);
-  --cl-body: rgba(255, 255, 255, 0.5);
-  --cl-desc: rgba(255, 255, 255, 0.3);
-  --cl-disable: rgba(255, 255, 255, 0.15);
-  --cl-border: rgba(255, 255, 255, 0.1);
-  --cl-orange: #ff3d00;
-  --cl-white: #fff;
+  /* Base */
+  --bg: #0c0d10; /* cool near-black */
+  --bg-invert: #faf9f5; /* warm off-white, inverted bands */
 
+  /* Text (white-with-opacity for harmony) */
+  --text: rgba(255, 255, 255, 0.5); /* default body */
+  --text-strong: #ffffff; /* emphasis */
+  --text-subtle: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.3); /* captions / labels */
+
+  /* On inverted bands */
+  --ink: #1d1d1d;
+  --ink-muted: rgba(29, 29, 29, 0.55);
+  --ink-faint: rgba(29, 29, 29, 0.3);
+
+  /* Stepped greys */
+  --grey-100: #eaeaea;
+  --grey-300: #d1d1d1;
+  --grey-500: #858687;
+  --grey-700: #50555b;
+
+  /* Single accent */
+  --accent: #00e5ff; /* electric cyan */
+  --accent-rgb: 0, 229, 255;
+
+  /* Overlays / layering */
+  --o-10: rgba(255, 255, 255, 0.1);
+  --o-15: rgba(255, 255, 255, 0.15);
+  --o-70: rgba(255, 255, 255, 0.7);
+  --line: rgba(255, 255, 255, 0.1);
+
+  /* Layout */
   --container-max: 1728px;
-  --container-pad: clamp(1.25rem, 4vw, 6rem);
+  --container-pad: clamp(1.25rem, 4.5vw, 6rem);
 
-  --spring-1: linear(
-    0, .002, .009 1%, .035, .078, .141 4.4%, .281 6.7%, .723 12.9%, .842, .938,
-    1.017, 1.077 20.4%, 1.101, 1.121, 1.137, 1.149 24.3%, 1.159, 1.163, 1.161,
-    1.154, 1.143, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 1.002, .991, .982 48.9%,
-    .977 51%, .974 53.8%, .975 57.1%, .979 60%, .997 69.8%, 1.001, 1.003 76.9%,
-    1.004 83.8%, 1
-  );
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-/* Map tokens into the Tailwind v4 theme so utilities like
-   bg-bg / text-title / border-line / text-orange work. */
+/* Map tokens into Tailwind v4 theme.
+   Existing utility names kept (text-title/subtitle/body/desc, border-line)
+   but their VALUES now point at the spec tokens. */
 @theme inline {
-  --color-bg: var(--cl-bg);
-  --color-title: var(--cl-title);
-  --color-subtitle: var(--cl-subtitle);
-  --color-body: var(--cl-body);
-  --color-desc: var(--cl-desc);
-  --color-disable: var(--cl-disable);
-  --color-line: var(--cl-border);
-  --color-orange: var(--cl-orange);
+  --color-bg: var(--bg);
+  --color-bg-invert: var(--bg-invert);
+  --color-title: var(--text-strong);
+  --color-subtitle: var(--text-subtle);
+  --color-body: var(--text);
+  --color-desc: var(--text-muted);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --color-grey-500: var(--grey-500);
+  --color-grey-700: var(--grey-700);
 
+  --font-display: var(--font-space), "Space Grotesk", sans-serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --breakpoint-xl: 1280px;
@@ -58,24 +79,24 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 84px;
+    scroll-padding-top: 88px;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeSpeed;
   }
 
   body {
-    background: var(--cl-bg);
-    color: var(--cl-body);
+    background: var(--bg);
+    color: var(--text);
     font-family: var(--font-sans);
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 1.0625rem; /* 17px base body */
     line-height: 1.4;
     overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--cl-orange);
-    color: #fff;
+    background: var(--accent);
+    color: #001014;
   }
 
   a {
@@ -87,14 +108,29 @@
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--cl-bg);
+    background: var(--bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--o-15);
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--cl-orange);
+    background: var(--accent);
+  }
+
+  /* Lenis smooth-scroll requirements */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
   }
 }
 
@@ -102,7 +138,6 @@
    Components & typography
    ============================================================ */
 @layer components {
-  /* Layout helpers */
   .container-x {
     width: 100%;
     max-width: var(--container-max);
@@ -110,57 +145,82 @@
     padding-inline: var(--container-pad);
   }
 
+  /* ~140px symmetric rhythm on major sections */
   .section {
-    padding-block: clamp(5rem, 12vh, 11rem);
+    padding-block: clamp(4.5rem, 11vh, 8.75rem);
   }
 
-  /* Display typography (very tight, very bold) */
+  /* --- Display typography (Space Grotesk, poster-tight) --- */
   .display-hero {
+    font-family: var(--font-display);
     font-weight: 700;
-    line-height: 0.88;
-    letter-spacing: -0.02em;
-    font-size: clamp(3.4rem, 13.5vw, 18rem);
+    line-height: 1; /* lines stack like a poster */
+    letter-spacing: 0;
+    font-size: clamp(3.1rem, 11.6vw, 9.8rem); /* ~157px */
     text-transform: uppercase;
   }
 
-  .display-xl {
+  .display-sub {
+    font-family: var(--font-display);
     font-weight: 700;
-    line-height: 0.92;
-    letter-spacing: -0.02em;
-    font-size: clamp(2.6rem, 7.5vw, 8rem);
+    line-height: 1.02;
+    letter-spacing: -0.005em;
+    font-size: clamp(2.4rem, 6.2vw, 4.375rem); /* ~70px */
     text-transform: uppercase;
   }
 
   .display-lg {
+    font-family: var(--font-display);
     font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.01em;
-    font-size: clamp(2.2rem, 5vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: 0;
+    font-size: clamp(2rem, 4.4vw, 3.2rem);
     text-transform: uppercase;
+  }
+
+  .intro-lg {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.6rem, 3.1vw, 2.375rem); /* ~38px */
+  }
+
+  .intro-md {
+    font-weight: 500;
+    line-height: 1.3;
+    font-size: clamp(1.3rem, 2.1vw, 1.75rem); /* ~28px */
+    color: var(--text-subtle);
   }
 
   .heading-md {
+    font-family: var(--font-display);
     font-weight: 600;
-    line-height: 1.15;
+    line-height: 1.12;
     letter-spacing: -0.01em;
-    font-size: clamp(1.6rem, 2.6vw, 2.75rem);
+    font-size: clamp(1.6rem, 2.6vw, 2.5rem);
   }
 
+  /* Small low-opacity caption labels used in left columns */
   .eyebrow {
-    font-size: 0.8125rem;
-    letter-spacing: 0.18em;
+    font-size: 0.8125rem; /* ~13–14px */
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--cl-desc);
+    color: var(--text-muted);
     font-weight: 500;
   }
 
   .lead {
-    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    font-size: clamp(1.0625rem, 1.3vw, 1.25rem); /* up to 20px */
     line-height: 1.5;
-    color: var(--cl-subtitle);
+    color: var(--text-subtle);
   }
 
-  /* Buttons */
+  .accent {
+    color: var(--accent);
+  }
+
+  /* --- Buttons --- */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -170,10 +230,10 @@
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.01em;
-    border: 1px solid var(--cl-border);
-    color: var(--cl-title);
-    transition: background 0.35s ease, color 0.3s ease,
-      border-color 0.3s ease, transform 0.3s ease;
+    border: 1px solid var(--line);
+    color: var(--text-strong);
+    transition: background 0.35s var(--ease-out-cubic), color 0.3s ease,
+      border-color 0.3s ease, transform 0.3s var(--ease-out-cubic);
     white-space: nowrap;
     cursor: pointer;
   }
@@ -181,17 +241,18 @@
     transform: translateY(-2px);
   }
   .btn-primary {
-    background: var(--cl-orange);
-    border-color: var(--cl-orange);
-    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #001014;
+    font-weight: 600;
   }
   .btn-primary:hover {
-    background: #ff5a26;
-    border-color: #ff5a26;
+    background: #5cf0ff;
+    border-color: #5cf0ff;
   }
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: var(--o-10);
+    border-color: var(--o-15);
   }
 
   .tag {
@@ -199,9 +260,9 @@
     align-items: center;
     padding: 0.4rem 0.85rem;
     border-radius: 999px;
-    border: 1px solid var(--cl-border);
+    border: 1px solid var(--line);
     font-size: 0.78rem;
-    color: var(--cl-subtitle);
+    color: var(--text-subtle);
     letter-spacing: 0.01em;
     white-space: nowrap;
   }
@@ -209,14 +270,14 @@
   .hr-line {
     height: 1px;
     width: 100%;
-    background: var(--cl-border);
+    background: var(--line);
     border: 0;
   }
 
-  /* Link with animated underline */
+  /* Animated underline link */
   .link-underline {
     position: relative;
-    color: var(--cl-subtitle);
+    color: var(--text-subtle);
     transition: color 0.3s ease;
   }
   .link-underline::after {
@@ -229,20 +290,57 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.4s var(--spring-1, ease);
+    transition: transform 0.4s var(--ease-out-cubic);
   }
   .link-underline:hover {
-    color: var(--cl-title);
+    color: var(--text-strong);
   }
   .link-underline:hover::after {
     transform: scaleX(1);
   }
+  .nav-link.is-active {
+    color: var(--accent);
+  }
+  .nav-link.is-active::after {
+    background: var(--accent);
+    transform: scaleX(1);
+  }
 
-  /* Reveal-on-scroll */
+  /* --- Inverted statement band (warm off-white) --- */
+  .section-invert {
+    background: var(--bg-invert);
+    color: var(--ink);
+  }
+  .section-invert .eyebrow {
+    color: var(--ink-faint);
+  }
+  .section-invert .text-title,
+  .section-invert .display-sub,
+  .section-invert .display-lg,
+  .section-invert .intro-lg {
+    color: var(--ink);
+  }
+  .section-invert .lead,
+  .section-invert .intro-md {
+    color: var(--ink-muted);
+  }
+  .section-invert .tag {
+    border-color: rgba(29, 29, 29, 0.18);
+    color: var(--ink-muted);
+  }
+  .section-invert .hr-line {
+    background-color: rgba(29, 29, 29, 0.14);
+  }
+  .section-invert.border-line,
+  .section-invert .border-line {
+    border-color: rgba(29, 29, 29, 0.14) !important;
+  }
+
+  /* --- Reveal on scroll --- */
   .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.8s ease, transform 0.8s var(--spring-1, ease);
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s var(--ease-out-cubic);
     will-change: opacity, transform;
   }
   .reveal.is-visible {
@@ -252,63 +350,135 @@
 }
 
 /* ============================================================
-   3D cube wordmark (hero last name)
-   Faces alternate white / orange; rotates forward with holds.
+   Scroll progress bar (top) — driven by GSAP scrub
+   ============================================================ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Intro loader — flat panel wipe
+   ============================================================ */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--bg);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: var(--container-pad);
+  padding-bottom: clamp(2rem, 6vh, 4rem);
+}
+.loader__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(2rem, 7vw, 5rem);
+  line-height: 1;
+  color: var(--text-strong);
+}
+.loader__count {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 7vw, 5rem);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.loader__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--accent);
+}
+
+/* ============================================================
+   3D rolling-cube wordmark
+   perspective ~720px, faces 90° apart, white <-> accent,
+   eased with cubic-bezier(.33,1,.68,1).
    ============================================================ */
 .cube {
   --cube-d: 0.44em;
   display: inline-block;
-  perspective: 1400px;
+  perspective: 720px;
   vertical-align: baseline;
 }
 .cube__inner {
   position: relative;
   display: inline-block;
   transform-style: preserve-3d;
-  animation: cube-spin 11s ease-in-out infinite;
+  animation: cube-roll 8s infinite;
 }
 .cube__face {
   display: inline-block;
   white-space: nowrap;
   backface-visibility: hidden;
-  background: var(--cl-bg);
+  background: var(--bg);
 }
 .cube__face--a {
   position: relative;
   transform: translateZ(var(--cube-d));
-  color: var(--cl-white);
+  color: var(--text-strong);
 }
 .cube__face--b {
   position: absolute;
   inset: 0;
   transform: rotateX(90deg) translateZ(var(--cube-d));
-  color: var(--cl-orange);
+  color: var(--accent);
 }
 .cube__face--c {
   position: absolute;
   inset: 0;
   transform: rotateX(180deg) translateZ(var(--cube-d));
-  color: var(--cl-white);
+  color: var(--text-strong);
 }
 .cube__face--d {
   position: absolute;
   inset: 0;
   transform: rotateX(270deg) translateZ(var(--cube-d));
-  color: var(--cl-orange);
+  color: var(--accent);
 }
 
-@keyframes cube-spin {
-  0%, 16% {
+/* roll 0.8s (10% of 8s) then hold; eased rolls, flat holds */
+@keyframes cube-roll {
+  0% {
     transform: rotateX(0deg);
+    animation-timing-function: var(--ease-out-cubic);
   }
-  25%, 41% {
+  10% {
     transform: rotateX(-90deg);
   }
-  50%, 66% {
+  25% {
+    transform: rotateX(-90deg);
+    animation-timing-function: var(--ease-out-cubic);
+  }
+  35% {
     transform: rotateX(-180deg);
   }
-  75%, 91% {
+  50% {
+    transform: rotateX(-180deg);
+    animation-timing-function: var(--ease-out-cubic);
+  }
+  60% {
     transform: rotateX(-270deg);
+  }
+  75% {
+    transform: rotateX(-270deg);
+    animation-timing-function: var(--ease-out-cubic);
+  }
+  85% {
+    transform: rotateX(-360deg);
   }
   100% {
     transform: rotateX(-360deg);
@@ -316,7 +486,7 @@
 }
 
 /* ============================================================
-   Custom trailing cursor ring (desktop only, see Cursor.tsx)
+   Trailing accent cursor ring (desktop only — see Cursor.tsx)
    ============================================================ */
 .cursor-ring {
   position: fixed;
@@ -324,7 +494,7 @@
   left: 0;
   width: 34px;
   height: 34px;
-  border: 1.5px solid var(--cl-orange);
+  border: 1.5px solid var(--accent);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
@@ -336,12 +506,12 @@
 .cursor-ring--active {
   width: 58px;
   height: 58px;
-  background-color: rgba(255, 61, 0, 0.12);
+  background-color: rgba(var(--accent-rgb), 0.12);
 }
 .cursor-ring--down {
   width: 26px;
   height: 26px;
-  background-color: rgba(255, 61, 0, 0.2);
+  background-color: rgba(var(--accent-rgb), 0.2);
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -350,6 +520,9 @@
   }
 }
 
+/* ============================================================
+   Reduced motion
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -363,6 +536,9 @@
     animation: none !important;
     transform: rotateX(0deg) !important;
   }
+  .cube__face--a {
+    color: var(--accent); /* freeze surname to accent */
+  }
   .cursor-ring {
     display: none !important;
   }
@@ -370,6 +546,7 @@
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }

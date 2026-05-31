@@ -1,21 +1,53 @@
 import Reveal from "@/components/Reveal";
+import ScrambleText from "@/components/ScrambleText";
 import { projects, type Project } from "@/data/content";
 
 function ProjectEntry({ project, index }: { project: Project; index: number }) {
   const num = String(index + 1).padStart(2, "0");
   return (
-    <Reveal as="article" className="border-t border-line py-10 lg:py-14">
+    <Reveal as="article" className="border-t border-line py-10 lg:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
-        {/* left: number + title + meta */}
+        {/* LEFT: number, title, description, metrics, services, links */}
         <div className="lg:col-span-5">
           <div className="flex items-baseline gap-4">
             <span className="text-desc text-[0.85rem] tabular-nums">{num}</span>
             <span className="text-desc text-[0.85rem]">{project.date}</span>
           </div>
-          <h3 className="heading-md text-title mt-3">{project.title}</h3>
-          <p className="lead mt-4 max-w-md">{project.oneLine}</p>
 
-          <ul className="flex flex-wrap gap-2 mt-6">
+          <h3 className="heading-md text-title mt-3">
+            <ScrambleText text={project.title} />
+          </h3>
+
+          {/* caption: Description */}
+          <p className="eyebrow mt-6 mb-2">Description</p>
+          <p className="lead max-w-md">{project.oneLine}</p>
+
+          {/* metrics-forward stat block (real numbers only) */}
+          {project.metrics && project.metrics.length > 0 && (
+            <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 max-w-md">
+              {project.metrics.map((m) => (
+                <div key={m.label} className="border-t border-line pt-3">
+                  <div
+                    className="accent leading-none"
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 700,
+                      fontSize: "clamp(1.5rem, 2.4vw, 2.1rem)",
+                    }}
+                  >
+                    {m.value}
+                  </div>
+                  <div className="text-desc text-[0.8rem] mt-2 leading-snug">
+                    {m.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* caption: Services / stack */}
+          <p className="eyebrow mt-8 mb-3">Services</p>
+          <ul className="flex flex-wrap gap-2">
             {project.stack.map((s) => (
               <li key={s} className="tag">
                 {s}
@@ -24,7 +56,7 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
           </ul>
 
           {(project.demo || project.repo) && (
-            <div className="flex flex-wrap gap-3 mt-6">
+            <div className="flex flex-wrap gap-3 mt-7">
               {project.demo && (
                 <a
                   href={project.demo}
@@ -49,15 +81,11 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
           )}
         </div>
 
-        {/* right: detail */}
-        <div className="lg:col-span-7 lg:pl-8 lg:border-l border-line space-y-6">
+        {/* RIGHT: the depth — problem, approach, decisions */}
+        <div className="lg:col-span-7 lg:pl-10 lg:border-l border-line space-y-7">
           <Detail label="Problem" text={project.problem} />
           <Detail label="Approach" text={project.approach} />
-          <Detail
-            label="Decisions & trade-offs"
-            text={project.decisions}
-            accent
-          />
+          <Detail label="Decisions & trade-offs" text={project.decisions} accent />
         </div>
       </div>
     </Reveal>
@@ -77,7 +105,7 @@ function Detail({
     <div>
       <p
         className="eyebrow mb-2"
-        style={accent ? { color: "var(--cl-orange)" } : undefined}
+        style={accent ? { color: "var(--accent)" } : undefined}
       >
         {label}
       </p>
@@ -92,14 +120,14 @@ export default function Work() {
       <div className="container-x">
         <Reveal>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
-            <h2 className="display-xl text-title">
+            <h2 className="display-sub text-title">
               Selected
               <br />
               Work
             </h2>
             <p className="lead max-w-sm md:text-right">
-              Shipped projects across AI/ML and full-stack. Each one notes the
-              decisions and trade-offs behind it.
+              Shipped projects across AI/ML and full-stack. Each one leads with
+              the facts, then the decisions and trade-offs behind it.
             </p>
           </div>
         </Reveal>

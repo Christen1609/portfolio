@@ -49,3 +49,6 @@ _hero.png
 
 # build logs
 *.log
+
+# editor backups
+*.orig

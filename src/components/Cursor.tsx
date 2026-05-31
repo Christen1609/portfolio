@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-// Orange ring that trails the mouse pointer. Desktop (fine pointer) only,
+// Accent ring that trails the mouse pointer. Desktop (fine pointer) only,
 // disabled under reduced-motion. pointer-events:none so it never blocks clicks.
 export default function Cursor() {
   const ringRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,8 @@ export default function Cursor() {
     let raf = 0;
     let shown = false;
 
-    const interactive = "a, button, [role='button'], input, textarea, select, .cube";
+    const interactive =
+      "a, button, [role='button'], input, textarea, select, .cube";
 
     const onMove = (e: MouseEvent) => {
       mouseX = e.clientX;

@@ -22,7 +22,7 @@ export const site = {
 } as const;
 
 export const hero = {
-  // First and last shown on separate lines, last name in orange (ref style)
+  // First and last shown on separate lines; last name is the rolling cube
   first: "CHRISTEN",
   last: "LOYOLA",
   positioning:
@@ -68,6 +68,11 @@ export const focusAreas: Focus[] = [
   },
 ];
 
+export type Metric = {
+  value: string;
+  label: string;
+};
+
 export type Project = {
   title: string;
   date: string;
@@ -76,6 +81,8 @@ export type Project = {
   approach: string;
   stack: string[];
   decisions: string;
+  // Real, defensible facts only — never invented numbers.
+  metrics?: Metric[];
   repo?: string;
   demo?: string;
 };
@@ -93,6 +100,10 @@ export const projects: Project[] = [
     stack: ["Next.js", "TypeScript", "LLM API"],
     decisions:
       "I mapped natural language onto a constrained set of catalog filters instead of letting the model generate freely, which keeps every result grounded in real inventory and rules out hallucinated offers. Rendering the catalog statically keeps the page fast and cheap, with the LLM call scoped only to the search interaction so the rest of the site carries no runtime AI cost.",
+    metrics: [
+      { value: "Live", label: "In production" },
+      { value: "NL", label: "Natural-language search" },
+    ],
     demo: "https://oolee.com.au",
   },
   {
@@ -107,6 +118,10 @@ export const projects: Project[] = [
     stack: ["Django", "Django REST Framework", "React", "OpenAI API"],
     decisions:
       "I kept regex generation on the server behind a REST boundary so the API key and prompt logic never reach the client. Returning the generated regex and an explanation, not just the result, lets users verify the transformation before it touches their data, and scoping replacements to selected columns avoids corrupting unrelated fields.",
+    metrics: [
+      { value: "CSV / XLSX", label: "File formats accepted" },
+      { value: "Plain text → regex", label: "via REST API" },
+    ],
   },
   {
     title: "Pattern Mining & Recommender System",
@@ -120,6 +135,10 @@ export const projects: Project[] = [
     stack: ["Python", "pandas", "scikit-learn", "Collaborative Filtering"],
     decisions:
       "I chose item-based collaborative filtering over user-based because item-to-item similarities stay stable as the user base shifts and are cheaper to precompute for fast serving. Pairing it with frequent pattern mining covers the cold-start gap, since basket association rules still surface sensible co-purchases when a customer has little history.",
+    metrics: [
+      { value: "Top 5", label: "Recommendations per customer" },
+      { value: "2 methods", label: "Collaborative filtering + pattern mining" },
+    ],
   },
   {
     title: "Automated Text Classification System",
@@ -133,6 +152,10 @@ export const projects: Project[] = [
     stack: ["Python", "Stack Exchange API", "pandas"],
     decisions:
       "A transparent rule-based approach fit a curated knowledge base where every categorisation has to be explainable and auditable, rather than a black box trained on noisy labels. It also avoided the cost and labelling effort of supervised training while staying easy to extend with new rules as fresh categories appear.",
+    metrics: [
+      { value: "22,000+", label: "NLP issues categorised" },
+      { value: "Stack Exchange API", label: "Data source" },
+    ],
   },
   {
     title: "Underwater Marine Animal Identification",
@@ -146,6 +169,11 @@ export const projects: Project[] = [
     stack: ["Python", "TensorFlow / Keras", "VGG16", "Custom CNN"],
     decisions:
       "Transfer learning from VGG16 was deliberate: roughly 7,000 images is too small to train a deep network from scratch without overfitting, so the pretrained convolutional features carry over generalisation from a far larger corpus. A custom CNN head on top adapted the model to marine-specific classes while keeping training tractable on limited hardware.",
+    metrics: [
+      { value: "~7,000", label: "Training images" },
+      { value: "Team lead", label: "Role" },
+      { value: "VGG16 + CNN", label: "Architecture" },
+    ],
   },
   {
     title: "ConserVision",
@@ -159,11 +187,16 @@ export const projects: Project[] = [
     stack: ["Python", "TensorFlow / Keras", "CNN"],
     decisions:
       "As an earlier project, this is where I learned to treat data quality as the real bottleneck rather than model depth, since class imbalance and inconsistent lighting in camera images hurt accuracy more than the architecture did. That lesson shaped how I handle preprocessing and augmentation in my later vision work.",
+    metrics: [
+      { value: "CNN", label: "Classification + counting" },
+      { value: "Wildlife imagery", label: "Domain" },
+    ],
   },
 ];
 
 export type Experience = {
   role: string;
+  type: string; // employment type, for the timeline row
   company: string;
   period: string;
   bullets: string[];
@@ -172,6 +205,7 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     role: "Software Engineer",
+    type: "Full-time",
     company: "Ahfy",
     period: "Sep 2025 – Present",
     bullets: [
@@ -183,7 +217,8 @@ export const experience: Experience[] = [
     ],
   },
   {
-    role: "Trainee Developer (Internship)",
+    role: "Trainee Developer",
+    type: "Internship",
     company: "Power Links Consortium",
     period: "Jun 2023 – Jul 2023",
     bullets: [
@@ -192,7 +227,8 @@ export const experience: Experience[] = [
     ],
   },
   {
-    role: "Online Intern",
+    role: "Software Intern",
+    type: "Internship · Remote",
     company: "Campalin Innovations",
     period: "Jan 2023 – Feb 2023",
     bullets: ["Developed a wine quality ranking system."],

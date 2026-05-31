@@ -11,20 +11,17 @@ export default function Footer() {
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <footer id="contact" className="section pb-12 border-t border-line">
+    <footer id="contact" className="section pb-10 border-t border-line">
       <div className="container-x">
         <Reveal>
           <p className="eyebrow mb-8">Contact</p>
-          <p className="display-lg text-subtitle max-w-4xl">
+          <p className="intro-lg text-title max-w-4xl">
             Open to AI/ML and software engineering roles. Let&apos;s build
             something worth shipping.
           </p>
 
-          <a
-            href={`mailto:${site.email}`}
-            className="group inline-block mt-10"
-          >
-            <span className="display-xl text-title break-words group-hover:text-orange transition-colors duration-300">
+          <a href={`mailto:${site.email}`} className="group inline-block mt-10">
+            <span className="display-sub text-title break-words transition-colors duration-300 group-hover:[color:var(--accent)]">
               {site.email}
             </span>
           </a>
@@ -37,8 +34,12 @@ export default function Footer() {
           </div>
         </Reveal>
 
-        <div className="mt-20 pt-8 border-t border-line flex flex-col sm:flex-row gap-6 sm:items-center sm:justify-between">
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
+        {/* Footer mirrors the header: copyright left / socials center / counter right */}
+        <div className="mt-24 pt-8 border-t border-line grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
+          <p className="text-desc text-[0.8rem] order-3 sm:order-1">
+            © {new Date().getFullYear()} {site.name}
+          </p>
+          <div className="flex flex-wrap justify-start sm:justify-center gap-x-6 gap-y-2 order-1 sm:order-2">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -53,8 +54,11 @@ export default function Footer() {
               </a>
             ))}
           </div>
-          <p className="text-desc text-[0.8rem]">
-            © {new Date().getFullYear()} {site.name}. {site.location}.
+          <p
+            className="text-desc text-[0.8rem] order-2 sm:order-3 sm:text-right tabular-nums"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {site.location} · 03 / 03
           </p>
         </div>
       </div>
