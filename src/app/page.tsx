@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import WorkedWith from "@/components/WorkedWith";
 import Work from "@/components/Work";
 import Footer from "@/components/Footer";
 import FocusAccordion from "@/components/FocusAccordion";
@@ -19,6 +20,9 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+
+        {/* COMPANIES I'VE WORKED WITH — revealed as the hero dissolves */}
+        <WorkedWith />
 
         {/* ABOUT */}
         <section id="about" className="section border-t border-line">

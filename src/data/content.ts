@@ -304,3 +304,49 @@ export const skillGroups: SkillGroup[] = [
 ];
 
 export const languages = ["English", "Tamil", "Hindi"];
+
+// ============================================================
+// "Companies I've worked with" band (full-bleed hero -> reveal)
+// Real roles only. Logos live in /public/logos.
+// ============================================================
+export type Company = {
+  name: string;
+  /** Path under /public. Omit to render a styled text wordmark instead. */
+  logo?: string;
+  role: string;
+  period: string;
+};
+
+export const companies: Company[] = [
+  {
+    name: "Ahfy",
+    // TODO(Christen): drop the Ahfy logo at portfolio/public/logos/ahfy.png
+    // (or .svg) then set:  logo: "/logos/ahfy.png"
+    role: "Software Engineer",
+    period: "2025 — Present",
+  },
+  {
+    name: "Power Links Consortium",
+    logo: "/logos/powerlinks.png",
+    role: "Trainee Developer",
+    period: "2023",
+  },
+  {
+    name: "Campalin Innovations",
+    logo: "/logos/campalin.png",
+    role: "Software Intern",
+    period: "2023",
+  },
+];
+
+// Shorter, distinct intro for the worked-with band (the longer version
+// still lives in `about.paragraphs`). No fabricated claims; no em dashes.
+export const worked = {
+  heading: "Companies I've worked with",
+  introLabel: "(Intro)",
+  intro: [
+    "I build machine learning that makes it out of the notebook and in front of real users. From the model and the LLM call to the API, the database, and the interface around it.",
+    "Across internships and my current role as a Software Engineer at Ahfy, I have shipped computer vision, NLP, and full-stack data systems, with the authentication, access control, and data models that production actually needs.",
+    "I am completing a Masters in AI and Machine Learning at the University of Adelaide. My goal is dependable AI that ships and earns trust.",
+  ],
+};

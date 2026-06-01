@@ -1,0 +1,153 @@
+"use client";
+
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import Reveal from "@/components/Reveal";
+import { companies, worked, type Company } from "@/data/content";
+
+/**
+ * WorkedWith — the band revealed as the hero dissolves.
+ *
+ * Left:  offset / asymmetric logo grid, tiles revealing on scroll with a
+ *        staggered fade + slight upward translate (reuses <Reveal/>).
+ * Right: intro paragraphs split into lines with GSAP SplitText. A scrubbed
+ *        ScrollTrigger walks each line from blurred + low-opacity to sharp +
+ *        full white, one line at a time. Lenis (already mounted globally)
+ *        smooths the scrub. Reduced motion falls back to a plain visible/fade.
+ */
+export default function WorkedWith() {
+  const introRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = introRef.current;
+    if (!el) return;
+
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // Reduced motion: no split, no scrub — plain fade-in handled by CSS class.
+    if (reduce) {
+      el.classList.add("intro-copy--plain");
+      return;
+    }
+
+    let cleanup = () => {};
+    let cancelled = false;
+
+    (async () => {
+      const [{ gsap }, { ScrollTrigger }, { SplitText }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+        import("gsap/SplitText"),
+      ]);
+      if (cancelled) return;
+
+      gsap.registerPlugin(ScrollTrigger, SplitText);
+
+      // Wait for fonts so line breaks split where they actually render.
+      await (document.fonts?.ready ?? Promise.resolve());
+      if (cancelled || !introRef.current) return;
+
+      const paras = introRef.current.querySelectorAll<HTMLElement>(".intro-p");
+      const split = new SplitText(paras, {
+        type: "lines",
+        linesClass: "intro-line",
+      });
+
+      gsap.set(split.lines, { opacity: 0.12, filter: "blur(7px)" });
+
+      const tween = gsap.to(split.lines, {
+        opacity: 1,
+        filter: "blur(0px)",
+        ease: "none",
+        stagger: 0.6,
+        scrollTrigger: {
+          trigger: introRef.current,
+          start: "top 78%",
+          end: "bottom 60%",
+          scrub: 0.6,
+        },
+      });
+
+      ScrollTrigger.refresh();
+
+      cleanup = () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+        split.revert();
+      };
+    })();
+
+    return () => {
+      cancelled = true;
+      cleanup();
+    };
+  }, []);
+
+  return (
+    <section id="companies" className="relative z-10 section">
+      <div className="container-x grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* LEFT — companies */}
+        <div className="lg:col-span-5">
+          <Reveal>
+            <p className="eyebrow max-w-[18ch] leading-[1.5] text-[0.9rem]">
+              {worked.heading}
+            </p>
+          </Reveal>
+
+          <div className="logo-grid mt-10">
+            {companies.map((c, i) => (
+              <Reveal
+                as="div"
+                key={c.name}
+                delay={i * 120}
+                className={`logo-tile logo-tile--${i}`}
+              >
+                <CompanyTile company={c} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT — intro */}
+        <div className="lg:col-span-7 lg:pl-6">
+          <div ref={introRef} className="intro-copy">
+            <span className="intro-label">{worked.introLabel}</span>
+            <div className="intro-text">
+              {worked.intro.map((p, i) => (
+                <p key={i} className="intro-p">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <a href="#work" aria-label="View work" className="arrow-btn">
+              <span aria-hidden>↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CompanyTile({ company }: { company: Company }) {
+  return (
+    <div className="logo-tile-inner" title={`${company.role} · ${company.period}`}>
+      {company.logo ? (
+        <Image
+          src={company.logo}
+          alt={company.name}
+          width={140}
+          height={90}
+          className="logo-img"
+        />
+      ) : (
+        <span className="logo-wordmark">{company.name}</span>
+      )}
+    </div>
+  );
+}

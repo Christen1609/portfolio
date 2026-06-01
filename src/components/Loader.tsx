@@ -1,64 +1,100 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { site } from "@/data/content";
 
-// Intro flat-panel wipe. Counts up, then the panel slides away upward.
-// Skipped entirely under reduced motion.
+/**
+ * Diagonal line loader.
+ *
+ * A cyan line draws along the top-left -> bottom-right diagonal on a black
+ * screen (a bar of length = the screen diagonal, pinned at the top-left and
+ * rotated to the diagonal angle, filled left-to-right via scaleX). When it
+ * completes, the black screen splits along that same diagonal into two
+ * triangles that slide off opposite corners, opening the page underneath.
+ *
+ * Geometry: angle = atan2(h, w), length = hypot(w, h). Skipped entirely under
+ * prefers-reduced-motion.
+ */
 export default function Loader() {
-  const [count, setCount] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const [gone, setGone] = useState(false);
+  const [dims, setDims] = useState<{ angle: number; hypot: number } | null>(
+    null
+  );
+  const [prog, setProg] = useState(0);
+  const [phase, setPhase] = useState<"draw" | "open" | "gone">("draw");
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
     if (reduce) {
-      setGone(true);
+      setPhase("gone");
       return;
     }
 
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    setDims({
+      angle: (Math.atan2(h, w) * 180) / Math.PI,
+      hypot: Math.hypot(w, h),
+    });
+
     document.body.style.overflow = "hidden";
 
-    let raf = 0;
+    const DRAW = 1300; // line draw duration
+    const OPEN = 950; // split-open duration
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
     const start = performance.now();
-    const dur = 1100;
+    let raf = 0;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
     const tick = (now: number) => {
-      const p = Math.min(1, (now - start) / dur);
-      setCount(Math.round(p * 100));
-      if (p < 1) {
+      const t = Math.min(1, (now - start) / DRAW);
+      setProg(easeOut(t));
+      if (t < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        setLeaving(true);
-        setTimeout(() => {
-          setGone(true);
-          document.body.style.overflow = "";
-        }, 850);
+        timers.push(setTimeout(() => setPhase("open"), 140));
+        timers.push(
+          setTimeout(() => {
+            setPhase("gone");
+            document.body.style.overflow = "";
+          }, 140 + OPEN)
+        );
       }
     };
     raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
+      timers.forEach(clearTimeout);
       document.body.style.overflow = "";
     };
   }, []);
 
-  if (gone) return null;
+  if (phase === "gone") return null;
 
   return (
     <div
-      className="loader"
+      className="dloader"
+      data-phase={phase}
       aria-hidden
-      style={{
-        transform: leaving ? "translateY(-100%)" : "translateY(0)",
-        transition: "transform 0.85s cubic-bezier(0.76, 0, 0.24, 1)",
-      }}
+      style={
+        {
+          "--angle": `${dims?.angle ?? 30}deg`,
+          "--hypot": `${dims?.hypot ?? 2200}px`,
+          "--prog": prog,
+        } as React.CSSProperties
+      }
     >
-      <span className="loader__name">{site.shortName}</span>
-      <span className="loader__count">
-        {String(count).padStart(3, "0")}
-      </span>
-      <span className="loader__bar" style={{ width: `${count}%` }} />
+      {/* two black halves split by the diagonal */}
+      <div className="dloader__half dloader__half--top" />
+      <div className="dloader__half dloader__half--bot" />
+
+      {/* the cyan diagonal line that draws top-left -> bottom-right */}
+      {dims && (
+        <div className="dloader__line">
+          <span className="dloader__line-fill" />
+        </div>
+      )}
     </div>
   );
 }

@@ -366,41 +366,65 @@
 }
 
 /* ============================================================
-   Intro loader — flat panel wipe
+   Intro loader — diagonal cyan line, then split-open reveal
    ============================================================ */
-.loader {
+.dloader {
   position: fixed;
   inset: 0;
   z-index: 9998;
+  pointer-events: none;
+  --prog: 0;
+  --angle: 30deg;
+  --hypot: 2200px;
+}
+/* the two black halves, split along the top-left -> bottom-right diagonal */
+.dloader__half {
+  position: fixed;
+  inset: 0;
   background: var(--bg);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: var(--container-pad);
-  padding-bottom: clamp(2rem, 6vh, 4rem);
+  z-index: 1;
+  transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform;
 }
-.loader__name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: clamp(2rem, 7vw, 5rem);
-  line-height: 1;
-  color: var(--text-strong);
+.dloader__half--top {
+  clip-path: polygon(0 0, 100% 0, 100% 100%); /* upper-right triangle */
 }
-.loader__count {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(2rem, 7vw, 5rem);
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
+.dloader__half--bot {
+  clip-path: polygon(0 0, 0 100%, 100% 100%); /* lower-left triangle */
 }
-.loader__bar {
-  position: absolute;
+.dloader[data-phase="open"] .dloader__half--top {
+  transform: translate(100%, -100%);
+}
+.dloader[data-phase="open"] .dloader__half--bot {
+  transform: translate(-100%, 100%);
+}
+/* the diagonal line: a bar of length = screen diagonal, pinned top-left and
+   rotated to the diagonal angle; the cyan fill grows left -> right */
+.dloader__line {
+  position: fixed;
+  top: 0;
   left: 0;
-  bottom: 0;
-  height: 2px;
-  width: 0%;
+  width: var(--hypot);
+  height: 4px;
+  margin-top: -2px; /* centre the 4px bar on the exact corner-to-corner line */
+  transform: rotate(var(--angle));
+  transform-origin: 0 0;
+  z-index: 2;
+}
+.dloader__line-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
   background: var(--accent);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.95),
+    0 0 28px rgba(var(--accent-rgb), 0.6);
+  transform: scaleX(var(--prog));
+  transform-origin: left;
+}
+.dloader[data-phase="open"] .dloader__line {
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* ============================================================
@@ -424,7 +448,10 @@
   display: inline-block;
   white-space: nowrap;
   backface-visibility: hidden;
-  background: var(--bg);
+  /* Translucent tinted glass instead of an opaque black box, so the
+     full-bleed portrait shows through behind the rolling word. The slight
+     tint keeps the white/cyan letters legible over a busy photo. */
+  background: rgba(12, 13, 16, 0.34);
 }
 .cube__face--a {
   position: relative;
@@ -518,6 +545,151 @@
   .cursor-ring {
     display: none;
   }
+}
+
+/* ============================================================
+   Full-bleed hero — darkening dissolve overlay
+   (opacity is scrubbed by Framer Motion; gradient gives the shape)
+   ============================================================ */
+.hero-darken {
+  background: linear-gradient(
+    to bottom,
+    rgba(12, 13, 16, 0.28) 0%,
+    rgba(12, 13, 16, 0.2) 38%,
+    rgba(12, 13, 16, 0.58) 72%,
+    rgba(12, 13, 16, 0.94) 100%
+  );
+  pointer-events: none;
+}
+.hero-darken--static {
+  opacity: 0.72;
+}
+
+/* ============================================================
+   "Companies I've worked with" — offset logo grid
+   ============================================================ */
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 1.6vw, 1.4rem);
+  align-content: start;
+  grid-auto-rows: min-content;
+}
+/* asymmetric vertical stagger — margins (not transforms) so they don't
+   fight the Reveal component's translate animation */
+.logo-tile--0 {
+  margin-top: 0;
+}
+.logo-tile--1 {
+  margin-top: 3.25rem;
+}
+.logo-tile--2 {
+  margin-top: -0.5rem;
+}
+
+.logo-tile-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.025);
+  transition: background 0.45s var(--ease-out-cubic),
+    border-color 0.45s var(--ease-out-cubic),
+    transform 0.45s var(--ease-out-cubic);
+}
+.logo-tile-inner:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--o-15);
+  transform: translateY(-3px);
+}
+/* Logos are pre-processed to white-on-transparent PNGs (see logo_to_mono.py),
+   so they blend straight onto the dark tile with no chip or blend mode. */
+.logo-img {
+  width: auto;
+  height: auto;
+  max-height: 58px;
+  max-width: 80%;
+  object-fit: contain;
+  display: block;
+  opacity: 0.78;
+  transition: opacity 0.4s var(--ease-out-cubic);
+}
+.logo-tile-inner:hover .logo-img {
+  opacity: 1;
+}
+.logo-wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+@media (max-width: 640px) {
+  .logo-tile--1 {
+    margin-top: 1.25rem;
+  }
+  .logo-tile--2 {
+    margin-top: 0;
+  }
+}
+
+/* ============================================================
+   Intro — GSAP SplitText line-by-line blur -> sharp reveal
+   ============================================================ */
+.intro-copy {
+  position: relative;
+}
+.intro-label {
+  display: inline-block;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 1.4rem;
+}
+.intro-text {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.45rem, 2.55vw, 2.1rem);
+  line-height: 1.34;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+.intro-p + .intro-p {
+  margin-top: 1.3em;
+}
+.intro-line {
+  will-change: opacity, filter;
+}
+/* reduced-motion fallback: plain, fully legible text (no split / scrub) */
+.intro-copy--plain .intro-text {
+  color: var(--text-strong);
+}
+
+/* Circular arrow button (CTA under the intro) */
+.arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 1.3rem;
+  transition: background 0.4s var(--ease-out-cubic),
+    border-color 0.4s ease, transform 0.4s var(--ease-out-cubic),
+    color 0.3s ease;
+}
+.arrow-btn:hover {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: var(--accent);
+  transform: translate(2px, -2px);
 }
 
 /* ============================================================
