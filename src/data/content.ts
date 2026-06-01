@@ -22,9 +22,15 @@ export const site = {
 } as const;
 
 export const hero = {
-  // First and last shown on separate lines; last name is the rolling cube
-  first: "CHRISTEN",
-  last: "LOYOLA",
+  // Small greeting top-left (Valentin Cheval style): first name highlighted,
+  // surname muted.
+  greeting: "Hi there! this is",
+  firstName: "Christen",
+  lastName: "Loyola",
+  // Giant poster lead-in (white), one line above the rolling cube.
+  lead: "I BUILD AS AN",
+  // The 3D cube rolls through these roles — one per cube face.
+  roles: ["AI ENGINEER", "SOFTWARE ENGINEER"],
   positioning:
     "AI/ML and software engineer. I build and ship LLM, computer vision, and full-stack data systems.",
   subline:
@@ -345,8 +351,8 @@ export const worked = {
   heading: "Companies I've worked with",
   introLabel: "(Intro)",
   intro: [
-    "I build machine learning that makes it out of the notebook and in front of real users. From the model and the LLM call to the API, the database, and the interface around it.",
-    "Across internships and my current role as a Software Engineer at Ahfy, I have shipped computer vision, NLP, and full-stack data systems, with the authentication, access control, and data models that production actually needs.",
-    "I am completing a Masters in AI and Machine Learning at the University of Adelaide. My goal is dependable AI that ships and earns trust.",
+    "I build software/AI products that make it out of the wrapper and in front of real users. From the model and the LLM call to the API, the database, and the interface around it.",
+    "Across internships, side projects, and my current role, Software Engineer at Ahfy, I have shipped AI with RAG pipelines, vector databases, NLP, full-stack data systems, and LLM integration, with the authentication, access control, and data models that production actually needs.",
+    "I have recently completed a Master's in Artificial Intelligence and Machine Learning at the University of Adelaide. My goal is to build AI that is scalable.",
   ],
 };

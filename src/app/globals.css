@@ -442,74 +442,30 @@
   position: relative;
   display: inline-block;
   transform-style: preserve-3d;
-  animation: cube-roll 8s infinite;
+  /* animation (name + duration) and per-face transforms are set inline by
+     CubeWord.tsx, computed from the number of words. */
+}
+/* Invisible in-flow element sizes the cube box to the widest word so the
+   shorter, absolutely-positioned faces are never clipped. */
+.cube__sizer {
+  display: inline-block;
+  visibility: hidden;
+  white-space: nowrap;
 }
 .cube__face {
-  display: inline-block;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   white-space: nowrap;
   backface-visibility: hidden;
-  /* Translucent tinted glass instead of an opaque black box, so the
-     full-bleed portrait shows through behind the rolling word. The slight
-     tint keeps the white/cyan letters legible over a busy photo. */
-  background: rgba(12, 13, 16, 0.34);
-}
-.cube__face--a {
-  position: relative;
-  transform: translateZ(var(--cube-d));
-  color: var(--text-strong);
-}
-.cube__face--b {
-  position: absolute;
-  inset: 0;
-  transform: rotateX(90deg) translateZ(var(--cube-d));
+  /* No box — fully translucent so the full-bleed portrait shows through
+     behind the rolling word. A soft shadow keeps the cyan letters legible
+     over a busy photo without painting a visible panel. */
+  background: transparent;
   color: var(--accent);
-}
-.cube__face--c {
-  position: absolute;
-  inset: 0;
-  transform: rotateX(180deg) translateZ(var(--cube-d));
-  color: var(--text-strong);
-}
-.cube__face--d {
-  position: absolute;
-  inset: 0;
-  transform: rotateX(270deg) translateZ(var(--cube-d));
-  color: var(--accent);
-}
-
-/* roll 0.8s (10% of 8s) then hold; eased rolls, flat holds */
-@keyframes cube-roll {
-  0% {
-    transform: rotateX(0deg);
-    animation-timing-function: var(--ease-out-cubic);
-  }
-  10% {
-    transform: rotateX(-90deg);
-  }
-  25% {
-    transform: rotateX(-90deg);
-    animation-timing-function: var(--ease-out-cubic);
-  }
-  35% {
-    transform: rotateX(-180deg);
-  }
-  50% {
-    transform: rotateX(-180deg);
-    animation-timing-function: var(--ease-out-cubic);
-  }
-  60% {
-    transform: rotateX(-270deg);
-  }
-  75% {
-    transform: rotateX(-270deg);
-    animation-timing-function: var(--ease-out-cubic);
-  }
-  85% {
-    transform: rotateX(-360deg);
-  }
-  100% {
-    transform: rotateX(-360deg);
-  }
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.55), 0 0 2px rgba(0, 0, 0, 0.45);
 }
 
 /* ============================================================
@@ -706,10 +662,7 @@
   }
   .cube__inner {
     animation: none !important;
-    transform: rotateX(0deg) !important;
-  }
-  .cube__face--a {
-    color: var(--accent); /* freeze surname to accent */
+    transform: rotateX(0deg) !important; /* show only the first role */
   }
   .cursor-ring {
     display: none !important;

@@ -48,7 +48,7 @@ export default function Hero() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[center_38%] grayscale"
+            className="object-cover object-[center_32%]"
           />
           <div className="absolute inset-0 hero-darken hero-darken--static" />
         </div>
@@ -73,7 +73,7 @@ export default function Hero() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[center_38%] grayscale"
+            className="object-cover object-[center_32%]"
           />
         </motion.div>
 
@@ -98,42 +98,32 @@ export default function Hero() {
 function HeroForeground() {
   return (
     <div className="h-[100svh] flex flex-col justify-between pt-28 pb-12">
-      {/* top meta row */}
+      {/* top meta row — greeting (left) + availability (right) */}
       <div className="container-x w-full">
         <div className="flex items-start justify-between gap-4">
-          <p className="eyebrow max-w-[16ch] sm:max-w-none">
-            {site.role}
-            <span className="hidden sm:inline"> &nbsp;//&nbsp; </span>
-            <br className="sm:hidden" />
-            <span className="text-body normal-case tracking-normal">
-              {site.location}
-            </span>
-          </p>
+          <div>
+            <p className="text-body text-[0.9rem]">{hero.greeting}</p>
+            <p className="font-display text-[1.45rem] sm:text-[1.8rem] leading-tight mt-1">
+              <span className="text-title font-bold">{hero.firstName}</span>{" "}
+              <span className="text-grey-500 font-normal">{hero.lastName}</span>
+            </p>
+          </div>
           <div className="text-right shrink-0">
             <span className="eyebrow block">Available</span>
             <span className="text-title text-[0.95rem] tabular-nums">
               {site.year}
             </span>
+            <span className="eyebrow block mt-3">{site.location}</span>
           </div>
         </div>
       </div>
 
-      {/* giant name + CTAs */}
+      {/* giant profession poster (white lead lines + rolling cube) + CTAs */}
       <div className="container-x w-full">
-        <h1 className="display-hero text-title">
-          <span className="block">{hero.first}</span>
+        <h1 className="display-hero text-title text-[clamp(1.9rem,8vw,6.5rem)]">
+          <span className="block whitespace-nowrap">{hero.lead}</span>
           <span className="block">
-            <CubeWord text={hero.last} />
-            <sup
-              className="accent"
-              style={{
-                fontSize: "0.28em",
-                verticalAlign: "super",
-                marginLeft: "0.1em",
-              }}
-            >
-              ®
-            </sup>
+            <CubeWord words={hero.roles} />
           </span>
         </h1>
 
