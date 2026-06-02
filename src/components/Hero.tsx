@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useReducedMotion,
+  useMotionValue,
+  useSpring,
 } from "framer-motion";
 import { hero, site } from "@/data/content";
 import CubeWord from "@/components/CubeWord";
@@ -18,7 +20,8 @@ import CubeWord from "@/components/CubeWord";
  * user scrolls through the pinned hero, a scrubbed Framer Motion timeline
  * scales the image up (1 -> ~1.6), fades it out, and ramps a darkening
  * gradient so it dissolves into the black page background, revealing the
- * section below. Gated behind prefers-reduced-motion (static fallback).
+ * section below. The portrait also drifts slightly toward the cursor for a
+ * subtle 3D parallax. Gated behind prefers-reduced-motion (static fallback).
  */
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -37,18 +40,36 @@ export default function Hero() {
   const headOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
   const headY = useTransform(scrollYProgress, [0, 0.6], ["0%", "-26%"]);
 
-  // --- Reduced motion: static full-bleed hero, no scrub. ---
+  // Cursor parallax — the portrait eases a few px toward the pointer.
+  const mvX = useMotionValue(0);
+  const mvY = useMotionValue(0);
+  const sx = useSpring(mvX, { stiffness: 70, damping: 18, mass: 0.4 });
+  const sy = useSpring(mvY, { stiffness: 70, damping: 18, mass: 0.4 });
+  const px = useTransform(sx, [-1, 1], [-22, 22]);
+  const py = useTransform(sy, [-1, 1], [-18, 18]);
+
+  const onPointer = (e: React.MouseEvent) => {
+    mvX.set((e.clientX / window.innerWidth) * 2 - 1);
+    mvY.set((e.clientY / window.innerHeight) * 2 - 1);
+  };
+  const onLeave = () => {
+    mvX.set(0);
+    mvY.set(0);
+  };
+
+  // --- Reduced motion: static full-bleed hero, no scrub / no parallax. ---
   if (reduce) {
     return (
       <section id="top" className="relative min-h-[100svh] overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/christen.jpeg"
+            src="/christen-suit.webp"
             alt="Christen I. Loyola"
             fill
             priority
+            quality={90}
             sizes="100vw"
-            className="object-cover object-[center_32%]"
+            className="object-cover object-[center_11%]"
           />
           <div className="absolute inset-0 hero-darken hero-darken--static" />
         </div>
@@ -61,19 +82,25 @@ export default function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative h-[185vh]">
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
-        {/* full-bleed portrait background */}
+      <div
+        className="sticky top-0 h-[100svh] overflow-hidden"
+        onMouseMove={onPointer}
+        onMouseLeave={onLeave}
+      >
+        {/* full-bleed portrait background (over-sized so parallax never
+            reveals an edge) */}
         <motion.div
-          className="absolute inset-0 will-change-transform"
-          style={{ scale, opacity: imgOpacity }}
+          className="absolute -inset-6 will-change-transform"
+          style={{ scale, opacity: imgOpacity, x: px, y: py }}
         >
           <Image
-            src="/christen.jpeg"
+            src="/christen-suit.webp"
             alt="Christen I. Loyola"
             fill
             priority
+            quality={90}
             sizes="100vw"
-            className="object-cover object-[center_32%]"
+            className="object-cover object-[center_11%]"
           />
         </motion.div>
 
@@ -96,13 +123,23 @@ export default function Hero() {
 }
 
 function HeroForeground() {
+  // Time-of-day greeting based on the viewer's local time. Starts from the
+  // static default (matches SSR) and updates on mount to avoid hydration drift.
+  const [greeting, setGreeting] = useState(hero.greeting);
+  useEffect(() => {
+    const h = new Date().getHours();
+    const part =
+      h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+    setGreeting(`${part}, this is`);
+  }, []);
+
   return (
     <div className="h-[100svh] flex flex-col justify-between pt-28 pb-12">
       {/* top meta row — greeting (left) + availability (right) */}
       <div className="container-x w-full">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-body text-[0.9rem]">{hero.greeting}</p>
+            <p className="text-body text-[0.9rem]">{greeting}</p>
             <p className="font-display text-[1.45rem] sm:text-[1.8rem] leading-tight mt-1">
               <span className="text-title font-bold">{hero.firstName}</span>{" "}
               <span className="text-grey-500 font-normal">{hero.lastName}</span>

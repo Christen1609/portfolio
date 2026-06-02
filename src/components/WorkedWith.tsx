@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Reveal from "@/components/Reveal";
+import { useBlurLines } from "@/components/useBlurLines";
 import { companies, worked, type Company } from "@/data/content";
 
 /**
@@ -17,73 +18,7 @@ import { companies, worked, type Company } from "@/data/content";
  */
 export default function WorkedWith() {
   const introRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = introRef.current;
-    if (!el) return;
-
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    // Reduced motion: no split, no scrub — plain fade-in handled by CSS class.
-    if (reduce) {
-      el.classList.add("intro-copy--plain");
-      return;
-    }
-
-    let cleanup = () => {};
-    let cancelled = false;
-
-    (async () => {
-      const [{ gsap }, { ScrollTrigger }, { SplitText }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-        import("gsap/SplitText"),
-      ]);
-      if (cancelled) return;
-
-      gsap.registerPlugin(ScrollTrigger, SplitText);
-
-      // Wait for fonts so line breaks split where they actually render.
-      await (document.fonts?.ready ?? Promise.resolve());
-      if (cancelled || !introRef.current) return;
-
-      const paras = introRef.current.querySelectorAll<HTMLElement>(".intro-p");
-      const split = new SplitText(paras, {
-        type: "lines",
-        linesClass: "intro-line",
-      });
-
-      gsap.set(split.lines, { opacity: 0.12, filter: "blur(7px)" });
-
-      const tween = gsap.to(split.lines, {
-        opacity: 1,
-        filter: "blur(0px)",
-        ease: "none",
-        stagger: 0.6,
-        scrollTrigger: {
-          trigger: introRef.current,
-          start: "top 78%",
-          end: "bottom 60%",
-          scrub: 0.6,
-        },
-      });
-
-      ScrollTrigger.refresh();
-
-      cleanup = () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-        split.revert();
-      };
-    })();
-
-    return () => {
-      cancelled = true;
-      cleanup();
-    };
-  }, []);
+  useBlurLines(introRef, ".intro-p");
 
   return (
     <section id="companies" className="relative z-10 section">

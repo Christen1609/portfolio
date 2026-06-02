@@ -496,6 +496,30 @@
   height: 26px;
   background-color: rgba(var(--accent-rgb), 0.2);
 }
+/* "hello" bubble over the email ring */
+.cursor-ring__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #001014;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.cursor-ring--hello {
+  width: 92px;
+  height: 92px;
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.cursor-ring--hello .cursor-ring__label {
+  opacity: 1;
+}
 
 @media (hover: none), (pointer: coarse) {
   .cursor-ring {
@@ -661,6 +685,371 @@
   background: rgba(var(--accent-rgb), 0.1);
   border-color: var(--accent);
   transform: translate(2px, -2px);
+}
+
+/* ============================================================
+   Projects — Valentin-style showcase
+   thumbnail rail + centre stage + year/description, switchable
+   ============================================================ */
+.proj-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0;
+  font-size: clamp(2.4rem, 6vw, 5.5rem);
+}
+.proj-range {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.13);
+}
+
+.proj-grid {
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .proj-grid {
+    grid-template-columns: 72px minmax(0, 1fr) 300px;
+    gap: clamp(1.5rem, 3vw, 3.5rem);
+  }
+}
+
+/* rail: active project = square thumbnail, the rest = thin lines */
+.proj-rail {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+}
+@media (min-width: 1024px) {
+  .proj-rail {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.proj-rail-square {
+  width: 58px;
+  height: 74px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+.proj-rail-square img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.proj-rail-line {
+  width: 58px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.proj-rail-line span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--line);
+  transition: background 0.3s ease, height 0.3s ease;
+}
+.proj-rail-line:hover span {
+  background: var(--text-muted);
+  height: 3px;
+}
+
+/* centre stage */
+.proj-stage {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+  overflow: hidden;
+  /* no frame border — keeps the stage invisible as cards shrink past it */
+}
+/* each project occupies a full-bleed layer so the outgoing and incoming cards
+   can animate across the diagonal at the same time */
+.proj-card {
+  position: absolute;
+  inset: 0;
+}
+.proj-card.is-in-fwd {
+  animation: proj-in-fwd var(--proj-anim, 0.6s) var(--ease-out-cubic) both;
+}
+.proj-card.is-out-fwd {
+  animation: proj-out-fwd var(--proj-anim, 0.6s) var(--ease-out-cubic) both;
+}
+.proj-card.is-in-back {
+  animation: proj-in-back var(--proj-anim, 0.6s) var(--ease-out-cubic) both;
+}
+.proj-card.is-out-back {
+  animation: proj-out-back var(--proj-anim, 0.6s) var(--ease-out-cubic) both;
+}
+/* forward (next): old shrinks away to bottom-right, new grows in from top-left */
+@keyframes proj-in-fwd {
+  from {
+    transform: translate(-55%, -55%) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes proj-out-fwd {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(55%, 55%) scale(0.5);
+    opacity: 0;
+  }
+}
+/* back (prev): mirror — old shrinks to top-left, new grows from bottom-right */
+@keyframes proj-in-back {
+  from {
+    transform: translate(55%, 55%) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes proj-out-back {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-55%, -55%) scale(0.5);
+    opacity: 0;
+  }
+}
+.proj-stage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.proj-view {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #001014;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.4s var(--ease-out-cubic), background 0.3s ease;
+}
+.proj-view:hover {
+  background: #5cf0ff;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* poster placeholder (no image yet) */
+.proj-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.85rem;
+  padding: clamp(1.1rem, 2.2vw, 1.8rem);
+  background: radial-gradient(
+      120% 80% at 72% 8%,
+      rgba(var(--accent-rgb), 0.16),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #181a20, #0c0d10);
+}
+.proj-ph-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.proj-ph-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--text-strong);
+}
+.proj-ph-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.proj-ph-tags span {
+  font-size: 0.68rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-subtitle);
+}
+
+/* meta column */
+.proj-meta {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+}
+.proj-year {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  color: var(--text-strong);
+  margin-top: 0.35rem;
+}
+.proj-meta .text-subtitle {
+  max-width: 34ch;
+}
+
+/* bottom row */
+.proj-bottom {
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+  border-top: 1px solid var(--line);
+  padding-top: 1.4rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.proj-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: clamp(2rem, 5vw, 4rem);
+  margin-top: 0.4rem;
+}
+.proj-all {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.proj-all:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Contact — rotating email ring + blended figure
+   ============================================================ */
+.contact-section {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3.5rem, 8vh, 6.5rem);
+  border-top: 1px solid var(--line);
+}
+.contact-glow {
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 60vh;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(var(--accent-rgb), 0.1),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+.contact-stage {
+  position: relative;
+  min-height: 620px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.email-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(330px, 36vw, 520px);
+  height: clamp(330px, 36vw, 520px);
+  transform: translate(-50%, -56%);
+  z-index: 1;
+  display: block;
+}
+.email-ring__svg {
+  width: 100%;
+  height: 100%;
+  animation: email-spin 26s linear infinite;
+}
+.email-ring__svg text {
+  fill: var(--text-subtle);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: fill 0.3s ease;
+}
+.email-ring:hover .email-ring__svg text {
+  fill: var(--accent);
+}
+@keyframes email-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.contact-figure {
+  position: relative;
+  z-index: 2;
+  height: clamp(420px, 62vh, 640px);
+  width: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  -webkit-mask-image: radial-gradient(
+    52% 78% at 50% 40%,
+    #000 38%,
+    transparent 84%
+  );
+  mask-image: radial-gradient(52% 78% at 50% 40%, #000 38%, transparent 84%);
+  pointer-events: none;
+}
+.contact-link {
+  color: var(--accent);
+  font-size: 0.98rem;
+  transition: opacity 0.25s ease;
+}
+.contact-link:hover {
+  opacity: 0.65;
 }
 
 /* ============================================================

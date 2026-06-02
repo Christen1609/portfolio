@@ -34,12 +34,18 @@ export default function Cursor() {
       }
     };
     const onOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest(interactive)) {
+      const t = e.target as HTMLElement;
+      if (t.closest('[data-cursor="hello"]')) {
+        ring.classList.add("cursor-ring--hello");
+      } else if (t.closest(interactive)) {
         ring.classList.add("cursor-ring--active");
       }
     };
     const onOut = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest(interactive)) {
+      const t = e.target as HTMLElement;
+      if (t.closest('[data-cursor="hello"]')) {
+        ring.classList.remove("cursor-ring--hello");
+      } else if (t.closest(interactive)) {
         ring.classList.remove("cursor-ring--active");
       }
     };
@@ -76,5 +82,9 @@ export default function Cursor() {
     };
   }, []);
 
-  return <div ref={ringRef} className="cursor-ring" aria-hidden />;
+  return (
+    <div ref={ringRef} className="cursor-ring" aria-hidden>
+      <span className="cursor-ring__label">hello</span>
+    </div>
+  );
 }

@@ -2,9 +2,10 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import WorkedWith from "@/components/WorkedWith";
 import Work from "@/components/Work";
-import Footer from "@/components/Footer";
+import Contact from "@/components/Contact";
 import FocusAccordion from "@/components/FocusAccordion";
 import Reveal from "@/components/Reveal";
+import BlurLines from "@/components/BlurLines";
 import {
   about,
   experience,
@@ -47,11 +48,13 @@ export default function Home() {
               </Reveal>
             </div>
             <div className="lg:col-span-8 space-y-6">
-              {about.paragraphs.map((p, i) => (
-                <Reveal key={i} delay={i * 80}>
-                  <p className="intro-lg text-subtitle">{renderEmphasis(p)}</p>
-                </Reveal>
-              ))}
+              <BlurLines className="space-y-6" selector=".about-p">
+                {about.paragraphs.map((p, i) => (
+                  <p key={i} className="intro-lg text-subtitle about-p">
+                    {renderEmphasis(p)}
+                  </p>
+                ))}
+              </BlurLines>
 
               {/* top skills strip */}
               <Reveal delay={120}>
@@ -87,7 +90,7 @@ export default function Home() {
                 {[
                   { v: "Masters", l: "AI & ML · University of Adelaide (Go8)" },
                   { v: "Now", l: "Software Engineer · Ahfy" },
-                  { v: "6", l: "Shipped projects, AI/ML to full-stack" },
+                  { v: "7", l: "Shipped projects, AI/ML to full-stack" },
                 ].map((s) => (
                   <div key={s.l} className="border-t border-line pt-4">
                     <div
@@ -147,11 +150,31 @@ export default function Home() {
                     <p className="mt-2 text-[0.95rem]">
                       <span className="text-desc">{job.type}</span>
                       <span className="text-desc"> · </span>
-                      <span className="accent">{job.company}</span>
+                      {job.url ? (
+                        <a
+                          href={job.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="accent hover:underline"
+                        >
+                          {job.company}
+                        </a>
+                      ) : (
+                        <span className="accent">{job.company}</span>
+                      )}
                     </p>
                     <p className="text-desc text-[0.85rem] mt-1 tabular-nums">
                       {job.period}
                     </p>
+                    {job.stack && (
+                      <ul className="flex flex-wrap gap-2 mt-4">
+                        {job.stack.map((s) => (
+                          <li key={s} className="tag">
+                            {s}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                   <ul className="lg:col-span-7 space-y-3">
                     {job.bullets.map((b, bi) => (
@@ -239,7 +262,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Contact />
     </>
   );
 }

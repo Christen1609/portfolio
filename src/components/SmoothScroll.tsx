@@ -38,6 +38,37 @@ export default function SmoothScroll() {
       gsap.ticker.lagSmoothing(0);
       cleanupFns.push(() => gsap.ticker.remove(ticker));
 
+      // Infinite loop: once the page is fully scrolled, scrolling down again
+      // wraps instantly to the top so the user keeps moving downward through the
+      // site from the beginning — no animated "rocket" back up.
+      let wrapping = false;
+      const triggerHome = () => {
+        if (wrapping) return;
+        const atBottom =
+          window.innerHeight + window.scrollY >=
+          document.documentElement.scrollHeight - 6;
+        if (!atBottom) return;
+        wrapping = true;
+        lenis?.scrollTo(0, { immediate: true, force: true });
+        window.setTimeout(() => {
+          wrapping = false;
+        }, 120);
+      };
+      const onEndWheel = (e: WheelEvent) => {
+        if (e.deltaY > 0) triggerHome();
+      };
+      const onEndKey = (e: KeyboardEvent) => {
+        if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
+          triggerHome();
+        }
+      };
+      window.addEventListener("wheel", onEndWheel, { passive: true });
+      window.addEventListener("keydown", onEndKey);
+      cleanupFns.push(() => {
+        window.removeEventListener("wheel", onEndWheel);
+        window.removeEventListener("keydown", onEndKey);
+      });
+
       // Anchor links -> Lenis scrollTo with header offset
       const onClick = (e: MouseEvent) => {
         const a = (e.target as HTMLElement).closest('a[href^="#"]');

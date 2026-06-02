@@ -23,13 +23,12 @@ export default function Reveal({
     const node = ref.current;
     if (!node) return;
 
+    // Toggle visibility on every enter AND leave so the reveal replays each
+    // time the element scrolls into view — in both directions, not just once.
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.unobserve(entry.target);
-          }
+          setVisible(entry.isIntersecting);
         });
       },
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
