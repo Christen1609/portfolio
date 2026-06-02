@@ -117,7 +117,16 @@ export default function WorkedWith() {
             <div className="intro-text">
               {worked.intro.map((p, i) => (
                 <p key={i} className="intro-p">
-                  {p}
+                  {/* Emphasize the word "scalable": bold + underline + caps */}
+                  {p.split(/(scalable)/i).map((part, j) =>
+                    /^scalable$/i.test(part) ? (
+                      <strong key={j} className="intro-emph">
+                        {part}
+                      </strong>
+                    ) : (
+                      part
+                    )
+                  )}
                 </p>
               ))}
             </div>

@@ -40,9 +40,9 @@ export const hero = {
 export const about = {
   heading: "About",
   paragraphs: [
-    "I am an engineer who likes to take machine learning out of the notebook and put it in front of real users. I am most comfortable across the whole path, from a model or an LLM call to the API, the database, and the interface around it.",
-    "At Ahfy I work on the backend with Supabase, designing authentication and role-based access control, writing Row Level Security policies for multi-role users with login-context-conditional visibility, and building React and TypeScript dashboards on top of a shared, standardized development database.",
-    "My focus is AI/ML: LLM integration, computer vision, and data pipelines. I am completing a Masters in Artificial Intelligence and Machine Learning at the University of Adelaide, a Group of Eight university, after a Bachelor of Engineering in Computer Science.",
+    "I am an engineer who likes to take projects out of the repos and put them in front of real users. I am most comfortable across the whole path, from a model or an LLM call to the API, the database, and the interface around it.",
+    "At Ahfy I work on the inside (everything, it's a startup!). Yes, that means Supabase: databases, authentication, role-based access control, and Row Level Security for multi-role users. But that is nowhere near all of it. I also build the frontend in React and TypeScript, design and ship new features, stand up a backend processor for handling huge files, debug whatever breaks, and handle the security side, like secure file uploads so people cannot drop just anything into our support page. At a startup, one engineer ends up doing everything, so honestly **my real skill is picking up whatever the job needs and learning it in a day**.",
+    "My focus is AI/ML: LLM integration, computer vision, and data pipelines. I recently completed a Master's in Artificial Intelligence and Machine Learning at the University of Adelaide, a Group of Eight university, after a Bachelor of Engineering in Computer Science.",
   ],
 };
 
@@ -274,6 +274,10 @@ export const topSkills = [
   "Machine Learning",
   "Deep Learning",
   "LLM Integration",
+  "RAG Pipelines",
+  "Vector Databases",
+  "MERN Stack",
+  "Task Queuing",
   "SQL",
 ];
 

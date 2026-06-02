@@ -619,6 +619,21 @@
 .intro-p + .intro-p {
   margin-top: 1.3em;
 }
+/* Emphasized keyword inside the intro copy (e.g. "scalable") */
+.intro-emph {
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 0.05em;
+}
+/* Bold + underlined emphasis for `**...**` phrases in body copy (no caps) */
+.copy-emph {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 0.05em;
+}
 .intro-line {
   will-change: opacity, filter;
 }

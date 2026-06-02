@@ -14,6 +14,20 @@ import {
   languages,
 } from "@/data/content";
 
+// Render `**text**` segments in copy as bold + underlined emphasis.
+function renderEmphasis(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+    const m = /^\*\*([^*]+)\*\*$/.exec(part);
+    return m ? (
+      <strong key={i} className="copy-emph">
+        {m[1]}
+      </strong>
+    ) : (
+      part
+    );
+  });
+}
+
 export default function Home() {
   return (
     <>
@@ -35,7 +49,7 @@ export default function Home() {
             <div className="lg:col-span-8 space-y-6">
               {about.paragraphs.map((p, i) => (
                 <Reveal key={i} delay={i * 80}>
-                  <p className="intro-lg text-subtitle">{p}</p>
+                  <p className="intro-lg text-subtitle">{renderEmphasis(p)}</p>
                 </Reveal>
               ))}
 
@@ -59,8 +73,13 @@ export default function Home() {
             <Reveal>
               <p className="eyebrow mb-8">Approach</p>
               <p className="display-lg max-w-5xl">
-                I build machine learning that ships. From the model and the LLM
-                call to the API, the database, and the interface around it.
+                I build products that can handle the real world.
+              </p>
+              <p className="intro-md max-w-3xl mt-8">
+                Which means asking the questions that matter before anything
+                ships: Can it take the load and the queries at scale? How does
+                it hold up security-wise? And what does latency look like under
+                real use?
               </p>
             </Reveal>
             <Reveal delay={120}>
