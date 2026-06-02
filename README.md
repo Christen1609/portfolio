@@ -2,7 +2,7 @@
 
 Personal portfolio for Christen I. Loyola, an AI/ML and software engineer based in Adelaide, Australia. A single-page, dark editorial site that showcases shipped projects, experience, and how to get in touch.
 
-> **Live:** _add your Vercel URL here once deployed_ (e.g. `https://christen-loyola.vercel.app`)
+> **Live:** https://christenloyolaportofliowebsite.vercel.app/
 
 ## Highlights
 
