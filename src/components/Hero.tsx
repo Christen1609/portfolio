@@ -63,13 +63,13 @@ export default function Hero() {
       <section id="top" className="relative min-h-[100svh] overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/christen-suit.webp"
+            src="/christen-real-hero.webp"
             alt="Christen I. Loyola"
             fill
             priority
             quality={90}
             sizes="100vw"
-            className="object-cover object-[center_11%]"
+            className="hero-img"
           />
           <div className="absolute inset-0 hero-darken hero-darken--static" />
         </div>
@@ -94,13 +94,13 @@ export default function Hero() {
           style={{ scale, opacity: imgOpacity, x: px, y: py }}
         >
           <Image
-            src="/christen-suit.webp"
+            src="/christen-real-hero.webp"
             alt="Christen I. Loyola"
             fill
             priority
             quality={90}
             sizes="100vw"
-            className="object-cover object-[center_11%]"
+            className="hero-img"
           />
         </motion.div>
 

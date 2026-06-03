@@ -967,6 +967,14 @@
   text-decoration: underline;
 }
 
+/* Hero uses a wide cinematic portrait (full seated figure centred in a
+   panelled room) so object-cover fills the screen edge-to-edge while the
+   whole body and armchair stay visible instead of zooming to the face. */
+.hero-img {
+  object-fit: cover;
+  object-position: center;
+}
+
 /* ============================================================
    Contact — rotating email ring + blended figure
    ============================================================ */
