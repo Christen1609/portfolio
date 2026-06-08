@@ -6,6 +6,7 @@ import Contact from "@/components/Contact";
 import FocusAccordion from "@/components/FocusAccordion";
 import Reveal from "@/components/Reveal";
 import BlurLines from "@/components/BlurLines";
+import { renderEmphasis } from "@/components/renderEmphasis";
 import {
   about,
   experience,
@@ -14,20 +15,6 @@ import {
   topSkills,
   languages,
 } from "@/data/content";
-
-// Render `**text**` segments in copy as bold + underlined emphasis.
-function renderEmphasis(text: string) {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    const m = /^\*\*([^*]+)\*\*$/.exec(part);
-    return m ? (
-      <strong key={i} className="copy-emph">
-        {m[1]}
-      </strong>
-    ) : (
-      part
-    );
-  });
-}
 
 export default function Home() {
   return (

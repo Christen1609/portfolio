@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import ScrambleText from "@/components/ScrambleText";
 import Reveal from "@/components/Reveal";
+import { renderEmphasis } from "@/components/renderEmphasis";
 import { projects, site } from "@/data/content";
 
 const ANIM_MS = 600;
@@ -201,7 +202,7 @@ export default function Work() {
             </div>
             <div>
               <p className="eyebrow">Description</p>
-              <p className="text-subtitle mt-2">{p.oneLine}</p>
+              <p className="text-subtitle mt-2">{renderEmphasis(p.oneLine)}</p>
             </div>
             <div>
               <p className="eyebrow">Stack</p>
