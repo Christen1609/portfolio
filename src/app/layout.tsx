@@ -4,7 +4,6 @@ import "./globals.css";
 import Cursor from "@/components/Cursor";
 import SmoothScroll from "@/components/SmoothScroll";
 import Loader from "@/components/Loader";
-import Announcement from "@/components/Announcement";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -46,7 +45,6 @@ export default function RootLayout({
     <html lang="en" className={spaceGrotesk.variable}>
       <body className="antialiased">
         <Loader />
-        <Announcement />
         <SmoothScroll />
         <Cursor />
         <div className="scroll-progress" id="scroll-progress" />
