@@ -321,7 +321,7 @@ export const education: Education[] = [
     degree: "Masters in Artificial Intelligence and Machine Learning",
     school: "University of Adelaide (Go8)",
     period: "2024 – 2026",
-    detail: "GPA 5.7 / 7",
+    detail: "GPA 5.9 / 7",
   },
   {
     degree: "Bachelor of Engineering, Computer Science",
